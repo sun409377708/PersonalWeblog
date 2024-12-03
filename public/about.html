@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我 - 简约博客</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/about.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo">简约博客</a>
+            <div class="nav-links">
+                <a href="/">首页</a>
+                <a href="/archive">归档</a>
+                <a href="/about" class="active">关于</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container about-page">
+        <div class="profile-section">
+            <div class="profile-header">
+                <div class="avatar-container">
+                    <img src="/images/priest.jpeg" alt="我的头像" class="avatar" id="currentAvatar">
+                    <div class="avatar-overlay">
+                        <label for="avatarUpload" class="upload-btn">更换头像</label>
+                        <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-info">
+                <div class="info-group">
+                    <label>姓名</label>
+                    <input type="text" id="name" placeholder="输入你的名字">
+                </div>
+                
+                <div class="info-group">
+                    <label>个性签名</label>
+                    <textarea id="bio" placeholder="写一段个性签名"></textarea>
+                </div>
+
+                <div class="info-group">
+                    <label>社交链接</label>
+                    <input type="text" id="github" placeholder="GitHub 链接">
+                    <input type="text" id="twitter" placeholder="Twitter 链接">
+                </div>
+
+                <div class="info-group">
+                    <label>个人介绍</label>
+                    <textarea id="about" placeholder="介绍一下你自己" rows="5"></textarea>
+                </div>
+
+                <button id="saveProfile" class="save-btn">保存更改</button>
+            </div>
+        </div>
+
+        <div id="toast" class="toast"></div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2023 简约博客. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="/js/about.js"></script>
+</body>
+</html>

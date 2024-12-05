@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文章标题 - 简约博客</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .post-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 80px 20px 40px;
+        }
+        .post-header {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        .post-title {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .post-meta {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .post-meta span {
+            margin: 0 10px;
+        }
+        .post-content {
+            line-height: 1.8;
+            color: #444;
+        }
+        .post-content p {
+            margin-bottom: 20px;
+        }
+        .post-content img {
+            max-width: 100%;
+            height: auto;
+            margin: 20px 0;
+        }
+        .post-navigation {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+        .nav-link {
+            color: #007bff;
+            text-decoration: none;
+            padding: 10px 0;
+        }
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 768px) {
+            .post-container {
+                padding: 70px 15px 30px;
+            }
+            .post-title {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo">简约博客</a>
+            <div class="nav-links">
+                <a href="/">首页</a>
+                <a href="/about">关于</a>
+                <a href="/architecture">架构</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="post-container">
+        <article class="post">
+            <header class="post-header">
+                <h1 class="post-title" id="post-title">加载中...</h1>
+                <div class="post-meta">
+                    <span class="date" id="post-date">日期加载中...</span>
+                    <span class="category" id="post-category">分类加载中...</span>
+                </div>
+            </header>
+            <div class="post-content" id="post-content">
+                内容加载中...
+            </div>
+            <div class="post-navigation">
+                <a href="#" class="nav-link" id="prev-post">上一篇</a>
+                <a href="#" class="nav-link" id="next-post">下一篇</a>
+            </div>
+        </article>
+    </main>
+
+    <script>
+        async function loadPost() {
+            // 从 URL 获取文章 ID
+            const postId = window.location.pathname.split('/').pop();
+            
+            try {
+                const response = await fetch(`/api/posts/${postId}`);
+                if (!response.ok) {
+                    throw new Error('文章未找到');
+                }
+                
+                const post = await response.json();
+                
+                // 更新页面内容
+                document.title = `${post.title} - 简约博客`;
+                document.getElementById('post-title').textContent = post.title;
+                document.getElementById('post-date').textContent = post.date;
+                document.getElementById('post-category').textContent = post.category;
+                document.getElementById('post-content').innerHTML = post.content.replace(/\n/g, '<br>');
+                
+                // 更新导航链接
+                const prevPostElem = document.getElementById('prev-post');
+                const nextPostElem = document.getElementById('next-post');
+
+                if (post.prevPost) {
+                    prevPostElem.href = `/post/${post.prevPost.id}`;
+                    prevPostElem.textContent = `« ${post.prevPost.title}`;
+                    prevPostElem.style.display = 'inline-block';
+                } else {
+                    prevPostElem.style.display = 'none';
+                }
+                
+                if (post.nextPost) {
+                    nextPostElem.href = `/post/${post.nextPost.id}`;
+                    nextPostElem.textContent = `${post.nextPost.title} »`;
+                    nextPostElem.style.display = 'inline-block';
+                } else {
+                    nextPostElem.style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error loading post:', error);
+                window.location.href = '/404.html';
+            }
+        }
+
+        // 页面加载时获取文章内容
+        window.addEventListener('load', loadPost);
+
+        // 监听导航链接点击事件
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const href = e.target.getAttribute('href');
+                if (href !== '#') {
+                    history.pushState(null, '', href);
+                    await loadPost();
+                }
+            });
+        });
+
+        // 监听浏览器前进/后退按钮
+        window.addEventListener('popstate', loadPost);
+    </script>
+</body>
+</html>

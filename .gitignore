@@ -1,12 +1,17 @@
 # Dependencies
 node_modules/
-package-lock.json
-
-# Environment variables
+npm-debug.log
+yarn-debug.log
+yarn-error.log
 .env
-
-# OS generated files
 .DS_Store
+*.log
+mongodb-macos-x86_64-8.0.3/
+deploy.tar.gz
+.idea/
+.vscode/
+*.swp
+*.swo
 .DS_Store?
 ._*
 .Spotlight-V100
@@ -14,13 +19,15 @@ package-lock.json
 ehthumbs.db
 Thumbs.db
 
-# MongoDB
-mongodb-macos-x86_64-8.0.3/
+# Database
 data/
-
-# SSL
-ssl/
-
-# IDE
-.idea/
-.vscode/
+db_backup.tar.gz
+db_data.tar.gz
+*.wt
+*.lock
+WiredTiger*
+diagnostic.data/
+journal/
+_mdb_catalog.wt
+mongod.lock
+storage.bson

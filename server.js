@@ -106,17 +106,21 @@ app.get('/api/posts/:id', async (req, res) => {
 // 获取文章列表
 app.get('/api/posts', async (req, res) => {
     try {
+        console.log('Fetching posts with MongoDB URI:', process.env.MONGODB_URI || 'mongodb://localhost:27017/blog');
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
         const skip = (page - 1) * limit;
 
+        console.log('Attempting to fetch posts with params:', { page, limit, skip });
         const posts = await Post.find()
             .sort({ date: -1 })
             .skip(skip)
             .limit(limit)
             .select('title date category excerpt');
 
+        console.log('Found posts:', posts);
         const total = await Post.countDocuments();
+        console.log('Total posts:', total);
 
         res.json({
             posts,
@@ -125,7 +129,8 @@ app.get('/api/posts', async (req, res) => {
             totalPages: Math.ceil(total / limit)
         });
     } catch (error) {
-        res.status(500).json({ message: '服务器错误' });
+        console.error('Error in /api/posts:', error);
+        res.status(500).json({ message: '服务器错误', error: error.message });
     }
 });
 
@@ -186,7 +191,7 @@ app.post('/api/profile', upload.single('avatar'), (req, res) => {
 });
 
 // 导入路由
-const authRoutes = require('./backend/src/routes/authRoutes');
+const authRoutes = require('./routes/authRoutes');
 app.use('/api/auth', authRoutes);
 
 // 前端路由
